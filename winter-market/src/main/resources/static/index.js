@@ -31,5 +31,20 @@ angular.module('market', []).controller('indexController', function ($scope, $ht
             });
     }
 
+    $scope.addToCart = function (productId) {
+        $http.get('http://localhost:8189/winter/api/v1/cart/add/' + productId)
+            .then(function (response) {
+                $scope.loadCart();
+            });
+    }
+
+    $scope.loadCart = function () {
+        $http.get('http://localhost:8189/winter/api/v1/cart')
+            .then(function (response) {
+                $scope.cart = response.data;
+            });
+    }
+
     $scope.fillTable();
+    $scope.loadCart();
 });
