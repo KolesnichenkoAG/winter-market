@@ -44,14 +44,20 @@
     <h3>Корзина</h3>
     <table class="table table-hover">
         <tr>
+            <td>Id</td>
             <td>Название</td>
             <td>Количество</td>
             <td>Цена</td>
         </tr>
         <tbody>
         <tr ng-repeat="item in cart.items">
+            <td>{{item.productId}}</td>
             <td>{{item.productTitle}}</td>
-            <td>{{item.quantity}}</td>
+            <td>
+                <button class="btn btn-primary" ng-click="changeQuantity(item.productId, -1)">-</button>
+                {{item.quantity}}
+                <button class="btn btn-primary" ng-click="changeQuantity(item.productId, 1)">+</button>
+            </td>
             <td>{{item.pricePerProduct + ' x ' + item.quantity + ' = ' + item.price}}</td>
 
         </tr>
@@ -59,6 +65,9 @@
             <td>Итого:</td>
             <td></td>
             <td>{{cart.totalPrice}}</td>
+            <td>
+                <button type="button" class="btn btn-danger" ng-click="clearCart()">Очистить корзину</button>
+            </td>
         </tr>
         </tbody>
     </table>

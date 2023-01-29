@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import ru.geekbrains.converters.ProductConverter;
 import ru.geekbrains.dtos.ProductDto;
 import ru.geekbrains.entities.Product;
 import ru.geekbrains.exceptions.AppError;
@@ -19,6 +20,7 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class ProductController {
     private final ProductService productService;
+    private final ProductConverter productConverter;
 
     @GetMapping
     public List<ProductDto> findAllProducts() {
@@ -37,8 +39,9 @@ public class ProductController {
 
     @GetMapping("/{id}")
     public ProductDto findProductById(@PathVariable Long id) {
-        Product p = productService.findById(id).orElseThrow(() -> new ResourceNotFoundException("Продукт не найден, id:" + id));
-        return new ProductDto(p.getId(), p.getTitle(), p.getPrice());
+        /*Product p = productService.findById(id).orElseThrow(() -> new ResourceNotFoundException("Продукт не найден, id:" + id));
+        return new ProductDto(p.getId(), p.getTitle(), p.getPrice());*/
+        return productConverter.entityToDto(productService.findById(id).orElseThrow(() -> new ResourceNotFoundException("Продукт с id: " + id + " не найден")));
     }
 
     @DeleteMapping("/{id}")

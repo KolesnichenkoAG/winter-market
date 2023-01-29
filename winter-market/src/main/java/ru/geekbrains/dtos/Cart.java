@@ -22,16 +22,41 @@ public class Cart {
     }
 
     public void add(Product product) { // TODO: Доработать в ДЗ
+        for (CartItem item : items) {
+            if (item.getProductId().equals(product.getId())) {
+                item.incrementQuantity();
+                totalPrice += product.getPrice();
+                return;
+            }
+        }
         items.add(new CartItem(product.getId(), product.getTitle(), 1, product.getPrice(), product.getPrice()));
-
         recalculate();
     }
-
 
     private void recalculate() {
         totalPrice = 0;
         for (CartItem item : items) {
             totalPrice += item.getPrice();
+        }
+    }
+
+    public void clear() {
+        items.clear();
+        totalPrice = 0;
+    }
+
+    public void deleteProductInCart(Product product) {
+            quantity = quantity-1;
+            totalPrice -= product.getPrice();
+    }
+
+    public void change(Product product, int delta) {
+        if (delta == 1) {
+            add(product);
+            totalPrice += product.getPrice();
+        }
+        if (delta == -1) {
+            deleteProductInCart(product);
         }
     }
 }

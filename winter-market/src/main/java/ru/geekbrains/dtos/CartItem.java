@@ -3,6 +3,7 @@ package ru.geekbrains.dtos;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import ru.geekbrains.entities.Product;
 
 @Data
 @AllArgsConstructor
@@ -14,4 +15,12 @@ public class CartItem {
     private int pricePerProduct;
     private int price;
 
+    public void incrementQuantity() {
+        quantity++;
+        //price = price.add(pricePerProduct);
+    }
+
+    public void decrementQuantity() {
+        quantity--;
+    }
 }
