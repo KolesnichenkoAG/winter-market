@@ -4,6 +4,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import ru.geekbrains.converters.ProductConverter;
+import ru.geekbrains.dtos.ProductDto;
 import ru.geekbrains.entities.Product;
 import ru.geekbrains.exceptions.AppError;
 import ru.geekbrains.exceptions.ResourceNotFoundException;
@@ -11,16 +13,18 @@ import ru.geekbrains.services.ProductService;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/api/v1/products")
 @RequiredArgsConstructor
 public class ProductController {
     private final ProductService productService;
+    private final ProductConverter productConverter;
 
     @GetMapping
-    public List<Product> findAllProducts() {
-        return productService.findAll();
+    public List<ProductDto> findAllProducts() {
+        return productService.findAll().stream().map(p -> new ProductDto(p.getId(), p.getTitle(), p.getPrice())).collect(Collectors.toList());
     }
 
    /* @GetMapping("/{id}")
@@ -34,8 +38,10 @@ public class ProductController {
     }*/
 
     @GetMapping("/{id}")
-    public Product findProductById(@PathVariable Long id) {
-        return productService.findById(id).orElseThrow(() -> new ResourceNotFoundException("Продукт не найден, id:" + id));
+    public ProductDto findProductById(@PathVariable Long id) {
+        /*Product p = productService.findById(id).orElseThrow(() -> new ResourceNotFoundException("Продукт не найден, id:" + id));
+        return new ProductDto(p.getId(), p.getTitle(), p.getPrice());*/
+        return productConverter.entityToDto(productService.findById(id).orElseThrow(() -> new ResourceNotFoundException("Продукт с id: " + id + " не найден")));
     }
 
     @DeleteMapping("/{id}")
